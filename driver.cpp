@@ -24,12 +24,15 @@ void convert(string line, string &operation, string &operand1, string &operand2,
 
 void defaultMessage();
 
-
+string intToHex(int long long str);
 
 bool nCheck(int);
 
 bool zCheck(int);
 
+void setOperand(string r0, string r1, string r2, string r3, string r4, string r5, string r6, string r7, string &operand);
+
+void setResult(string &r0, string &r1, string &r2, string &r3, string &r4, string &r5, string &r6, string &r7, string operand, string set);
 
 // Main
 int main()
@@ -126,77 +129,289 @@ cout << R"(Wrong Choice, Tux is very disapointed
 // Reads the file
 void readFile(string filename, int addSub)
 {
-    // Declares the two numbers that the hex will be translated to
-    unsigned int num1, num2, num3;
+ifstream file;
+file.open(filename);
 
-    signed int sNum1;
+if(file.is_open())
+{
+    string r0 = "0\0       ", r1= "0\0        ", r2= "0\0       ", r3= "0\0       ", r4= "0\0       ", 
+    r5= "0\0       ", r6= "0\0       ", r7= "0\0       ";
+    bool N = 0, Z = 0, C = 0, V = 0;
 
-    string hex1, hex2, hex3;
-    // Opening file
-    ifstream file;
-    file.open(filename);
-
-    if(file.is_open())
+    while(!file.eof())
     {
-        string r0, r1, r2, r3, r4, r5, r6, r7, r8;
-        while(!file.eof())
-        {
-            //cout << "gets to read the file" << endl;
-            string line, operation = "          ", operand1 = "             ", operand2 = "             ", operand3 = "             ";
-            getline(file, line);
-            convert(line, operation, operand1, operand2, operand3);
-            cout << operation << " " << operand1 << " " << operand2 << " " << operand3 << endl;
+        //cout << "gets to read the file" << endl;
+        string line, operation = "    ", operand1 = "         ", operand2 = "         ", operand3 = "         ";
+        getline(file, line);
+        cout << line << endl;
+        convert(line, operation, operand1, operand2, operand3);
+        //cout << operation << " " << operand1 << " " << operand2 << " " << operand3 << endl;
 
-            if(operation == "MOV" || operation == "mov")
-            {
-                switch(operand1[1])
-                {
-                    case 0:
-                        r0 = operand2;
-                    break;
-                    case 1:
-                        r1 = operand2;
-                    break;
-                    case 2:
-                        r2 = operand2;
-                    break;
-                    case 3:
-                        r3 = operand2;
-                    break;
-                    case 4:
-                        r4 = operand2;
-                    break;
-                    case 5:
-                        r5 = operand2;
-                    break;
-                    case 6:
-                        r6 = operand2;
-                    break;
-                    case 7:
-                        r7 = operand2;
-                    break;
-                }
-                cout << "MOV done :)" << endl; 
-            }
-            else if(operation == "ADD" || operation == "ADDS" || operation == "add" || operation == "adds")
-            {
-                int num1, num2, num3;
-                num1 = stoll(operand1, 0, 16);
-                num2 = stoll(operand2, 0, 16);
-                num3 = stoll(operand3, 0, 16);
-                cout << num1 << num2 << num3 << endl;
-            }
-            
+        if(operation == "MOV " || operation == "mov ")
+        {
+            setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, operand2);
         }
-    }
-    file.close();
-    cout << endl;
+        else if(operation == "ADD" || operation == "ADDS" || operation == "add" || operation == "adds")
+        {
+
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand3);                
+
+        int long num1 = stoll(operand2,0,16);
+        int long num2 = stoll(operand3,0,16);
+        int long tempInt = num1 + num2;
+        string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);          
+
+            if(operation == "ADDS" || operation == "adds")
+            {
+                if(tempInt > 2147483647)
+                {
+                    N = !N;
+                } 
+
+            }
+                if(tempInt == 0)
+                {
+                    Z = !Z;
+                }
+
+                if(tempInt < num1)
+                {
+                    C = !C;
+                }
+                int vCheck = tempInt;
+                if(tempInt > num1 || tempInt < num2)
+                {
+                    V = !V;
+                }
+
+        }
+        else if(operation == "SUB" || operation == "sub" || operation == "SUBS" || operation == "subs")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand3);                
     
+            int long long num1 = stoll(operand2,0,16);
+            int long long num2 = stoll(operand3,0,16);
+            int long long tempInt = num1 - num2;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);                 
+
+            if(operation == "SUBS" || operation == "subs")
+            {
+                if(tempInt < 2147483647)
+                {
+                    N = !N;
+                } 
+
+            }
+                if(tempInt == 0)
+                {
+                    Z = !Z;
+                }
+
+                if(tempInt < num1)
+                {
+                    C = !C;
+                }
+                int vCheck = tempInt;
+                if(tempInt > num1 || tempInt < num2)
+                {
+                    V = !V;
+                }
+
+        }
+        else if(operation == "AND" || operation == "and" || operation == "ANDS" || operation == "ands")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand3);                
+    
+            int long num1 = stoll(operand2,0,16);
+            int long num2 = stoll(operand3,0,16);
+            int long tempInt = num1 & num2;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);  
+
+        if(operation == "ANDS" || operation == "ands")
+        {
+            if(tempInt > 2147483647)
+            {
+                N = !N;
+            } 
+        }
+
+            if(tempInt == 0)
+            {
+                Z = !Z;
+            }
+
+            if(tempInt > num1)
+            {
+                C = !C;
+            }
+            int vCheck = tempInt;
+            if(tempInt > num1 || tempInt > num2)
+            {
+                V = !V;
+            }
+
+        }
+        else if(operation == "ORR" || operation == "orr " || operation == "ORRS" || operation == "orrs")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand3);                
+    
+            int long long num1 = stoll(operand2,0,16);
+            int long long num2 = stoll(operand3,0,16);
+            int long long tempInt = num1 | num2;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);       
+        if(operation == "ORRS" || operation == "orrs")
+        {
+            if(tempInt > 2147483647)
+            {
+                N = !N;
+            } 
+        }
+
+            if(tempInt == 0)
+            {
+                Z = !Z;
+            }
+
+            if(tempInt < num1)
+            {
+                C = !C;
+            }
+            int vCheck = tempInt;
+            if(tempInt < num1 || tempInt < num2)
+            {
+                V = !V;
+            }
+
+        }
+        else if(operation == "XOR " || operation == "xor " || operation == "XORS" || operation == "xors")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand3);                
+    
+            int long long num1 = stoll(operand2,0,16);
+            int long long num2 = stoll(operand3,0,16);
+            int long long tempInt = num1 ^ num2;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);  
+        if(operation == "XORS" || operation == "xors")
+        {
+            if(tempInt > 2147483647)
+            {
+                N = !N;
+            } 
+        }
+
+            if(tempInt == 0)
+            {
+                Z = !Z;
+            }
+
+            if(tempInt < num1)
+            {
+                C = !C;
+            }
+            int vCheck = tempInt;
+            if(tempInt < num1 || tempInt < num2)
+            {
+                V = !V;
+            }
+
+
+
+        }    
+        else if(operation == "LSR " || operation == "lsr " || operation == "LSRS" || operation == "lsrs")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2);             
+            int shift = operand3[1]-48;
+            int long long num1 = stoll(operand2,0,16);
+            int long long tempInt = num1 >> shift;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);                 
+
+        if(operation == "LSRS" || operation == "lsrs")
+        {
+            if(tempInt > 2147483647)
+            {
+                N = !N;
+            } 
+        }
+
+            if(tempInt == 0)
+            {
+                Z = !Z;
+            }
+
+            if(tempInt > num1)
+            {
+                C = !C;
+            }
+            int vCheck = tempInt;
+            if(tempInt > num1)
+            {
+                V = !V;
+            }
+
+
+        }
+        else if(operation == "LSL " || operation == "lsl " || operation == "LSLS" || operation == "lsls")
+        {
+        setOperand(r0, r1, r2, r3, r4, r5, r6, r7, operand2); 
+            int shift = operand3[1]-48;
+            int long long num1 = stoll(operand2,0,16);
+            int long long tempInt = num1 << shift;
+            string temp = intToHex(tempInt);
+
+        setResult(r0, r1, r2, r3, r4, r5, r6, r7, operand1, temp);  
+        if(operation == "LSLS" || operation == "lsls")
+        {
+            if(tempInt > 2147483647)
+            {
+                N = !N;
+            } 
+        }
+
+            if(tempInt == 0)
+            {
+                Z = !Z;
+            }
+
+            if(tempInt > num1)
+            {
+                C = !C;
+            }
+            int vCheck = tempInt;
+            if(tempInt < num1)
+            {
+                V = !V;
+            }
+
+        }
+
+    cout << "r0:0x" <<  r0 << " r1:0x" << r1 << " r2:0x" << r2 << " r3:0x" << r3 << endl << "r4:0x" << r4 << " r5:0x" << r5 << " r6:0x" << r6 << " r7:0x" << r7 << endl; 
+    cout << "N = " << N << " Z = " << Z << " C = " << C << " V = " << V << endl;    
+    }
+}
+file.close();
+cout << endl;
+
 }
 
 void convert(string line, string &operation, string &operand1, string &operand2, string &operand3)
 {
-//cout << line << endl;
 int i = 0;
 do
 {
@@ -207,6 +422,7 @@ i++;
 int j = 0;
 do
 {
+    if(line[i] != ',')
     operand1[j] = line[i];
     i++;
     j++;
@@ -215,37 +431,31 @@ i++;
 int k = 0;
 do
 {
+    if(line[i] != ',' && line[i] != '#' && line[i] != 'x' && line[i] != 'O')
+    {
     operand2[k] = line[i];
-    i++;
     k++;
+    }
+    i++;
 } while (line[i] != ' ');
 i++;
 int l = 0;
-//if(line[i] != ' ')
 do
 {
+
     operand3[l] = line[i];
     i++;
     l++;
 }while(line[i] != '\0');
 
-
-
 }
 
 
-
-bool nCheck(int num)
+string intToHex(int long long str)
 {
-    int numCompare;
-    string compareNum = "3fffffff";
-    numCompare = stoll(compareNum, 0, 16);
-    if(num > numCompare)
-    {
-        return 1;
-    }else{
-        return 0;
-    }
+  stringstream stream;
+  stream << hex << str;
+  return stream.str();
 }
 
 bool zCheck(int num)
@@ -258,4 +468,66 @@ bool zCheck(int num)
         return 0;
     }
 
+}
+
+void setOperand(string r0, string r1, string r2, string r3, string r4, string r5, string r6, string r7, string &operand)
+{
+    switch(operand[1])
+    {
+        case '0':
+            operand = r0;
+        break;
+        case '1':
+            operand = r1;
+        break;
+        case '2':
+            operand = r2;
+        break;
+        case '3':
+            operand = r3;
+        break;
+        case '4':
+            operand = r4;
+        break;
+        case '5':
+            operand = r5;
+        break;
+        case '6':
+            operand = r6;
+        break;
+        case '7':
+            operand = r7;
+        break;
+    } 
+}
+
+void setResult(string &r0, string &r1, string &r2, string &r3, string &r4, string &r5, string &r6, string &r7, string operand, string set)
+{
+    switch(operand[1])
+    {
+        case '0':
+            r0 = set;
+        break;
+        case '1':
+            r1 = set;
+        break;
+        case '2':
+            r2 = set;
+        break;
+        case '3':
+            r3 = set;
+        break;
+        case '4':
+            r4 = set;
+        break;
+        case '5':
+            r5 = set;
+        break;
+        case '6':
+            r6 = set;
+        break;
+        case '7':
+            r7 = set;
+        break;
+    }      
 }

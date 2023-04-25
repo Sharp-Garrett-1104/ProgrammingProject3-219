@@ -1,9 +1,10 @@
 #Operation
-1. The hexCalc program takes the numbers from the CLA file, in this case it is supposed to be "calcNum.txt".
-2. To run you should use "./hexCalc calcNum.txt", it will not run properly without a file in the command line. 
+1. The hex program takes the inputs from the calcNum.txt file, in this case it is supposed to be "calcNum.txt".
+2. To run you should use "./hex", it will just use any file named "calcNum.txt"
 3. To recompile or compile you use the makefile commands, 'make clean' to remove the file and 'make' to compile.
-4. Any file with the same format can be added, with unlimited amount of hex numbers. 
-5. For any operator, if you only want/need one input you must put a throwaway value for the second input. For example the second input for the NOT is just '1'.
+4. Any file with the same format can be added, it just has to be of the same format
+5. For any operator, if you only want/need two inputs you must put a throwaway value for the third input. For example the third input for the MOV is just '0'.
+6. To use after running, just press 1. If you press zero it exits. Whatever you do, do not use anything but 1 or 0 (Jumpscare). 
 #Creation Process
     The program is pretty simple. Could have been done in way less lines and way more simple, but in an attempt to Future Proof™ it has been made with a bit of infrastructure.
-Simply asks the user what they want to do, reads the file, and operates.
+Simply asks the user what they want to do, reads the file, and operates. 
