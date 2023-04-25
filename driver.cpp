@@ -18,17 +18,12 @@ using namespace std;
 // Function Prototypes
 void readFile(string, int);
 
-void addHex(unsigned long long int, unsigned long long int);
 
 void convert(string line, string &operation, string &operand1, string &operand2, string &operand3);
 
 void defaultMessage();
 
 string intToHex(int long long str);
-
-bool nCheck(int);
-
-bool zCheck(int);
 
 void setOperand(string r0, string r1, string r2, string r3, string r4, string r5, string r6, string r7, string &operand);
 
@@ -450,24 +445,11 @@ do
 
 }
 
-
 string intToHex(int long long str)
 {
   stringstream stream;
   stream << hex << str;
   return stream.str();
-}
-
-bool zCheck(int num)
-{
-
-    if(num == 0)
-    {
-        return 1;
-    }else{
-        return 0;
-    }
-
 }
 
 void setOperand(string r0, string r1, string r2, string r3, string r4, string r5, string r6, string r7, string &operand)
